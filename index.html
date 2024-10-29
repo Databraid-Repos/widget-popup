@@ -80,7 +80,7 @@
         }
 
         .modal-content {
-            height: calc(100% - 51px); /* Subtracting header height */
+            height: calc(100% - 51px);
             width: 100%;
             border: none;
             border-bottom-left-radius: 8px;
@@ -102,8 +102,8 @@
                 id="widgetFrame"
                 allowfullscreen
                 loading="eager"
-                onerror="console.error('iframe failed to load:', event)"
-                onload="console.log('iframe loaded')"
+                onerror="handleFrameError(event)"
+                onload="handleFrameLoad()"
                 referrerpolicy="no-referrer-when-downgrade"
                 importance="high">
             </iframe>
@@ -113,6 +113,45 @@
     <script>
         const modal = document.getElementById('modalOverlay');
         const frame = document.getElementById('widgetFrame');
+
+        const config = {
+            policyId: '234235',
+            carrierId: '1',
+            awsSecretArn: 'arn:aws:secretsmanager:ca-central-1:711387121912:secret:TestBroker/SampleCarrier-xNScC1'
+        };
+
+        function handleFrameLoad() {
+            console.log('iframe loaded');
+            setupMessageListener();
+        }
+
+        function handleFrameError(event) {
+            console.error('iframe failed to load:', event);
+        }
+
+        function setupMessageListener() {
+            // Listen for messages from the iframe
+            window.addEventListener('message', function(event) {
+                // Verify the origin matches your DataBraid app
+                if (event.origin !== 'https://databraidbrokerwidget.vercel.app') {
+                    console.error('Unauthorized origin:', event.origin);
+                    return;
+                }
+
+                if (event.data.type === 'ready') {
+                    // Send configuration data to iframe
+                    frame.contentWindow.postMessage({
+                        type: 'initialize',
+                        data: config
+                    }, 'https://databraidbrokerwidget.vercel.app');
+                }
+
+                // Handle any close requests from iframe
+                if (event.data.type === 'close') {
+                    closeModal();
+                }
+            });
+        }
 
         function openModal() {
             modal.style.display = 'block';
@@ -139,6 +178,9 @@
                 closeModal();
             }
         });
+
+        // Initial setup of message listener
+        setupMessageListener();
     </script>
 </body>
 </html>
