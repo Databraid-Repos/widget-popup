@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="frame-src https://databraidbrokerwidget.vercel.app">
-    <title>DataBraid Prod</title>
+    <meta http-equiv="Content-Security-Policy" content="frame-src https://staging-databraidbrokerwidget.vercel.app">
+    <title>DataBraid Staging</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -33,12 +33,12 @@
     </style>
 </head>
 <body>
-    <h1>Production Environment</h1>
+    <h1>Staging Environment</h1>
     <button id="launch-databraid" class="btn">Launch Databraid</button>
     <script 
-        src="https://widget.databraid.io/embed.js"
+        src="https://staging-databraidbrokerwidget.vercel.app/embed.js"
         data-button-id="launch-databraid"
-        data-policy-id="234235"
+        data-policy-id="5005"
         data-carrier-id="1"
         data-aws-arn="arn:aws:secretsmanager:ca-central-1:711387121912:secret:TestBroker/SampleCarrier-xNScC1"
         async
