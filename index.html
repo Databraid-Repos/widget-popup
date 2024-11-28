@@ -30,18 +30,67 @@
         .btn:hover {
             background-color: #0052a3;
         }
+        .btn:disabled {
+            background-color: #d3d3d3;
+            cursor: not-allowed;
+        }
+
+        #databraid-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     <h1>Production Environment</h1>
-    <button id="launch-databraid" class="btn">Launch Databraid</button>
-    <script 
-        src="https://widget.databraid.io/embed.js"
-        data-button-id="launch-databraid"
-        data-policy-id="234235"
-        data-carrier-id="1"
-        data-aws-arn="arn:aws:secretsmanager:ca-central-1:711387121912:secret:TestBroker/SampleCarrier-xNScC1"
-        async
-    ></script>
+    <form id="databraid-form">
+        <input type="text" id="carrier-id" placeholder="Carrier ID" required>
+        <input type="text" id="policy-id" placeholder="Policy ID" required>
+        <input type="text" id="aws-arn" placeholder="AWS ARN" required>
+        <button type="submit">Submit</button>
+    </form>
+
+    <button id="launch-databraid" class="btn" disabled>Launch DataBraid</button>
+
+    <script>
+        document
+          .getElementById("databraid-form")
+          .addEventListener("submit", function (event) {
+            event.preventDefault();
+            const carrierId = document.getElementById("carrier-id").value;
+            const policyId = document.getElementById("policy-id").value;
+            const awsArn = document.getElementById("aws-arn").value;
+  
+            // Enable the "Launch DataBraid" button
+            const launchButton = document.getElementById("launch-databraid");
+            if (launchButton) {
+              launchButton.removeAttribute("disabled");
+            }
+  
+            // Add the script
+            let script = document.querySelector(
+              'script[data-button-id="launch-databraid"]'
+            );
+            if (script) {
+              script.remove();
+            }
+            script = document.createElement("script");
+            script.src = "https://widget.databraid.io/embed.js";
+            script.dataset.buttonId = "launch-databraid";
+            script.async = true;
+            script.dataset.policyId = policyId;
+            script.dataset.carrierId = carrierId;
+            script.dataset.awsArn = awsArn;
+            document.body.appendChild(script);
+  
+            // Remove the form
+            const form = document.getElementById("databraid-form");
+            if (form) {
+              form.remove();
+            }
+          });
+      </script>
 </body>
 </html>
