@@ -30,18 +30,30 @@
         .btn:hover {
             background-color: #0052a3;
         }
+        .btn:disabled {
+            background-color: #d3d3d3;
+            cursor: not-allowed;
+        }
+
+        #databraid-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     <h1>Production Environment</h1>
-    <button id="launch-databraid" class="btn">Launch Databraid</button>
-    <script 
-        src="https://widget.databraid.io/embed.js"
-        data-button-id="launch-databraid"
-        data-policy-id="234235"
-        data-carrier-id="1"
-        data-aws-arn="arn:aws:secretsmanager:ca-central-1:711387121912:secret:TestBroker/SampleCarrier-xNScC1"
-        async
-    ></script>
+    <form id="databraid-form">
+        <input type="text" id="carrier-id" placeholder="Carrier ID" required>
+        <input type="text" id="policy-id" placeholder="Policy ID" required>
+        <input type="text" id="aws-arn" placeholder="AWS ARN" required>
+        <button type="submit">Submit</button>
+    </form>
+
+    <button id="launch-databraid" class="btn" disabled>Launch DataBraid</button>
+
+    <script src="./add-widget.js"></script>
 </body>
 </html>
